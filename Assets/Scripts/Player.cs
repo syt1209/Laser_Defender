@@ -5,14 +5,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // Configuration parameters
-    [SerializeField]
-    private float _speed = 10f;
-    [SerializeField]
-    private float _padding = 1f;
-    [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField]
-    private float _laserSpeed = 10f;
+    [SerializeField] private float _speed = 10f;
+    [SerializeField] private float _padding = 1f;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private float _laserSpeed = 10f;
+    [SerializeField] private float _firingInterval = 0.1f;
+
+    private Coroutine _firingCoroutine;
 
     
     float xMin, xMax, yMin, yMax;
@@ -41,12 +40,26 @@ public class Player : MonoBehaviour
 
     private void Fire()
     {
-        if (Input.GetButtonDown("Fire1"))  // space or left mouse
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+           _firingCoroutine = StartCoroutine(FiringContinuously());
+        }
+        if (Input.GetKeyUp(KeyCode.Space)) 
+        { 
+            StopCoroutine(_firingCoroutine); 
+        }
+    }
+
+    IEnumerator FiringContinuously()
+    {
+        while (true) 
         {
             GameObject laser = Instantiate(_laserPrefab, transform.position, Quaternion.identity) as GameObject;
 
             laser.GetComponent<Rigidbody2D>().velocity = new Vector2(0, _laserSpeed);
             Debug.Log(laser.GetComponent<Rigidbody2D>().velocity);
+
+            yield return new WaitForSeconds(_firingInterval);
         }
     }
 
