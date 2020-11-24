@@ -57,7 +57,6 @@ public class Player : MonoBehaviour
             GameObject laser = Instantiate(_laserPrefab, transform.position, Quaternion.identity) as GameObject;
 
             laser.GetComponent<Rigidbody2D>().velocity = new Vector2(0, _laserSpeed);
-            Debug.Log(laser.GetComponent<Rigidbody2D>().velocity);
 
             yield return new WaitForSeconds(_firingInterval);
         }
